@@ -1,5 +1,3 @@
-# Proyecto_DL
-=======
 # **Anomaly Detection in Colombian Stocks using Autoencoders**
 
 ## **Descripción**
@@ -31,6 +29,7 @@ notebooks/
 models/
 reports/
 ```
+
 
 ## **Tecnologías**
 
