@@ -38,11 +38,10 @@ jobs:
       - name: Build site
         run: jupyter-book build
 
-      - name: Upload Pages artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _build/html
-
+          path: _build/site
   deploy:
     environment:
       name: github-pages
