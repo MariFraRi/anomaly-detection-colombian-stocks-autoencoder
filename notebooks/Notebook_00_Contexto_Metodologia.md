@@ -3,10 +3,9 @@
 **Proyecto:** Detección de Anomalías y Cambios de Régimen en Acciones Colombianas
 mediante Denoising Autoencoders con Arquitecturas LSTM/GRU
 
-**Autores:** [Nombre del equipo]  
-**Institución:** [Nombre de la institución]  
-**Fecha:** 2024  
-**Versión:** 1.0
+**Autores:** Mariana Franco - Danier Conde - Samuel Bermúdez 
+**Institución:** Universidad del Norte  
+**Fecha:** 2026 
 
 ---
 
