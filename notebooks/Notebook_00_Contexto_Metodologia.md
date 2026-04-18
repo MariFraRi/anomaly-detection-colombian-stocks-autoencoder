@@ -1,4 +1,4 @@
-# Notebook 0: Contexto y Metodología
+# Contexto y Metodología
 
 **Proyecto:** Detección de Anomalías y Cambios de Régimen en Acciones Colombianas
 mediante Denoising Autoencoders con Arquitecturas LSTM/GRU
