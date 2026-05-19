@@ -9,7 +9,7 @@ La búsqueda bibliográfica se construyó mediante la combinación sistemática 
 - `"anomaly detection" AND "time series" AND "deep learning"`
 - `"LSTM autoencoder" AND "unsupervised" AND "financial time series"`
 - `"reconstruction error" AND "anomaly detection" AND "recurrent neural network"`
-- `"regime change detection" AND "deep learning" AND "equity markets"`
+- `"financial anomaly detection" AND "deep learning" AND "emerging markets"`
 - `"encoder-decoder" AND "LSTM" AND "time series anomaly"`
 - `"transformer" AND "anomaly detection" AND "multivariate time series"`
 
@@ -42,7 +42,7 @@ La búsqueda bibliográfica se construyó mediante la combinación sistemática 
 
 ## 3.2 Identificación del Top de Modelos
 
-A partir de la revisión sistemática se identificaron **siete modelos** que satisfacen los criterios de inclusión y presentan relevancia directa para el problema de detección de anomalías y cambios de régimen en series de tiempo financieras. Los modelos se ordenan de acuerdo con su impacto arquitectónico y alineación con el presente proyecto:
+A partir de la revisión sistemática se identificaron **siete modelos** que satisfacen los criterios de inclusión y presentan relevancia directa para el problema de detección de anomalías en series de tiempo financieras. Los modelos se ordenan de acuerdo con su impacto arquitectónico y alineación con el presente proyecto:
 
 | # | Modelo | Arquitectura | Venue | Año |
 |---|--------|-------------|-------|-----|
@@ -100,7 +100,7 @@ Sobre SMD (benchmark posterior): F1$_\text{best}$ = 0.7729 (Precision 0.9014, Re
 
 - Robustez ante series impredecibles: no requiere que la serie sea pronosticable.
 - Capacidad de manejar secuencias de longitud variable (T=30 a T=500).
-- Marco directamente aplicable a datos financieros no estacionarios con cambios de régimen abruptos.
+- Marco directamente aplicable a datos financieros no estacionarios con anomalías abruptas.
 - Entrenamiento exclusivamente sobre datos normales: compatible con el protocolo de no fuga temporal del presente proyecto.
 
 **Limitaciones**
@@ -205,7 +205,7 @@ SMD, SMAP, MSL, SWaT (Secure Water Treatment), WADI.
 
 - Entrenamiento estable comparado con GANs completos.
 - Alta capacidad de recuperación ante anomalías de baja amplitud.
-- Recall elevado en SMD y MSL: relevante para detección de cambios de régimen graduales en mercados.
+- Recall elevado en SMD y MSL: relevante para detección de anomalías graduales en mercados.
 
 **Limitaciones**
 
@@ -354,7 +354,7 @@ Precision y Recall superiores al 85% en Yahoo Benchmark (S5); desempeño competi
 **Limitaciones**
 
 - Basado en predicción: ineficaz ante series impredecibles (como retornos financieros a corto plazo).
-- Las CNNs no capturan dependencias de largo alcance de forma nativa: limitación crítica para cambios de régimen graduales.
+- Las CNNs no capturan dependencias de largo alcance de forma nativa: limitación crítica para anomalías de desarrollo gradual.
 - El umbral adaptativo no dispone de fundamentación estadística robusta en colas pesadas.
 
 **Complejidad computacional**
@@ -456,13 +456,13 @@ La incorporación de objetivos auxiliares (aprendizaje contrastivo en CAE-AD, di
 A pesar del progreso documentado, se identifican tres brechas relevantes para el contexto del presente proyecto:
 
 **Gap 1: Ausencia de validación en mercados emergentes.**
-Los benchmarks dominantes (SMD, SMAP, MSL) corresponden a datos industriales y de telemetría. La generalización a series financieras de mercados emergentes latinoamericanos —caracterizadas por menor liquidez, mayor clustering de volatilidad, y regímenes de crisis más abruptos (e.g., COVID-19, choques del precio del petróleo)— no ha sido sistemáticamente validada.
+Los benchmarks dominantes (SMD, SMAP, MSL) corresponden a datos industriales y de telemetría. La generalización a series financieras de mercados emergentes latinoamericanos —caracterizadas por menor liquidez, mayor clustering de volatilidad, y patrones de anomalía más abruptos (e.g., COVID-19, choques del precio del petróleo)— no ha sido sistemáticamente validada.
 
 **Gap 2: Tratamiento del problema de umbralización en distribuciones de cola pesada.**
 La mayoría de los modelos revisados utilizan umbrales basados en percentiles empíricos o distribuciones gaussianas del error de reconstrucción. Los retornos financieros presentan colas pesadas (exceso de curtosis documentado en el Notebook 1 del presente proyecto), lo que implica que los umbrales basados en normalidad subestimarán la frecuencia de eventos extremos legítimos y sobreestimarán la tasa de falsos positivos.
 
 **Gap 3: Modelos de activo único vs. portafolio.**
-La literatura se centra predominantemente en detección multivariada de alta dimensionalidad o en detección univariada aislada. El presente proyecto opera en un espacio intermedio: activos colombianos (EC, CIB, AVAL, TGLS) con correlaciones conocidas entre sí, para los cuales un modelo por activo con feature vector de baja dimensionalidad ($d=3$) puede capturar los regímenes locales de cada instrumento sin la complejidad computacional de los modelos multivariados de alta dimensión.
+La literatura se centra predominantemente en detección multivariada de alta dimensionalidad o en detección univariada aislada. El presente proyecto opera en un espacio intermedio: activos colombianos (EC, CIB, AVAL, TGLS) con correlaciones conocidas entre sí, para los cuales un modelo por activo con feature vector de baja dimensionalidad ($d=3$) puede capturar los patrones de anomalía locales de cada instrumento sin la complejidad computacional de los modelos multivariados de alta dimensión.
 
 ---
 
@@ -478,6 +478,6 @@ La justificación de esta elección se fundamenta en los siguientes criterios:
 - **Comparación DAE-LSTM vs. DAE-GRU**: la competencia entre variantes permite aislar el efecto de la arquitectura de celda recurrente (compuertas LSTM vs. GRU) sobre la capacidad de detección, manteniendo constantes todos los demás factores del pipeline.
 - **Umbral percentil empírico**: consistente con la evidencia de colas pesadas identificada en el EDA y con la recomendación de no asumir distribución gaussiana del error de reconstrucción.
 
-El benchmark experimental incluye cinco comparadores metodológicamente válidos para el marco no supervisado: Z-Score estadístico, Isolation Forest, One-Class SVM, LSTM Predictor y GRU Predictor. Los modelos supervisados (Random Forest, XGBoost) fueron **excluidos** por requerir etiquetas de anomalía durante el entrenamiento, lo que es incompatible con el marco no supervisado del proyecto y constituiría una comparación metodológicamente injusta.
+El benchmark experimental incluye cinco comparadores metodológicamente válidos para el marco no supervisado: Z-Score estadístico, Isolation Forest, One-Class SVM, LSTM Predictor y GRU Predictor.
 
 Los modelos Transformer (Anomaly Transformer, TranAD) y el modelo contrastivo (CAE-AD) quedan identificados como extensiones naturales del trabajo futuro, condicionadas a la disponibilidad de datos de mayor dimensionalidad o a la extensión del análisis a portafolios multivariados de los cuatro activos colombianos.

@@ -1,11 +1,11 @@
 # Contexto y Metodología
 
-**Proyecto:** Detección de Anomalías y Cambios de Régimen en Acciones Colombianas
+**Proyecto:** Detección de Anomalías en Mercados Accionarios Colombianos
 mediante Denoising Autoencoders con Arquitecturas LSTM/GRU
 
-**Autores:** Mariana Franco - Danier Conde - Samuel Bermúdez 
+**Autores:** Mariana Franco - Danier Conde - Samuel Bermúdez  
 **Institución:** Universidad del Norte  
-**Fecha:** 2026 
+**Fecha:** 2026
 
 ---
 
@@ -40,7 +40,7 @@ Este fenómeno se manifiesta en tres dimensiones fundamentales:
 
 - **Heterocedasticidad condicional:** La varianza de los retornos no es constante en
   el tiempo. Los periodos de alta volatilidad tienden a agruparse (efecto ARCH/GARCH),
-  generando regímenes diferenciados de riesgo que no pueden modelarse adecuadamente
+  generando condiciones diferenciadas de riesgo que no pueden modelarse adecuadamente
   mediante distribuciones homocedásticas.
 
 - **Colas pesadas (leptocurtosis):** La distribución empírica de los retornos
@@ -48,11 +48,10 @@ Este fenómeno se manifiesta en tres dimensiones fundamentales:
   lo que implica que los eventos extremos ocurren con una frecuencia sustancialmente
   mayor a la predicha por modelos gaussianos.
 
-- **Cambios de régimen:** Los mercados atraviesan periodos alternos de comportamiento
-  estructuralmente distinto — periodos de baja volatilidad y tendencia alcista
-  ("bull markets") versus periodos de alta volatilidad y caídas pronunciadas
-  ("bear markets" o crisis) — que no pueden ser capturados por un único modelo
-  paramétrico estático.
+- **Comportamiento anómalo recurrente:** Los mercados atraviesan periodos de
+  comportamiento estadísticamente atípico — caídas pronunciadas, picos de volatilidad,
+  shocks de volumen — que se manifiestan como anomalías detectables y que no pueden
+  ser capturados por un único modelo paramétrico estático.
 
 ### **1.2 El Mercado Colombiano: Características Específicas**
 
@@ -88,9 +87,9 @@ del análisis:
 
 El problema central de esta investigación se define como sigue:
 
-> **Dado un conjunto de series de tiempo financieras multivariadas correspondientes
-> a acciones colombianas, ¿es posible construir un sistema no supervisado capaz de
-> aprender la representación latente del comportamiento normal del mercado y señalar
+> **Dado un conjunto de series de tiempo financieras correspondientes a acciones
+> colombianas, ¿es posible construir un sistema no supervisado capaz de aprender
+> la representación latente del comportamiento normal del mercado y señalar
 > automáticamente las observaciones que se desvían significativamente de dicha
 > representación?**
 
@@ -123,7 +122,7 @@ comportamiento anómalo, lo cual es una condición considerablemente menos restr
 
 La detección de anomalías en series financieras tiene aplicaciones directas en:
 
-- **Gestión de riesgo:** Identificación temprana de cambios de régimen que justifiquen
+- **Gestión de riesgo:** Identificación temprana de anomalías que justifiquen
   el ajuste dinámico de posiciones o la activación de coberturas.
 - **Vigilancia de mercados:** Detección de manipulación de precios o comportamientos
   anómalos de volumen que puedan señalar actividad irregular.
@@ -144,7 +143,7 @@ limitaciones estructurales cuando se aplican a datos financieros:
 **Métodos estadísticos paramétricos (Z-score, IQR):** Asumen distribuciones
 específicas (frecuentemente gaussianas) que no se ajustan a la distribución empírica
 de los retornos financieros. La detección basada en umbrales estáticos no se adapta
-a los cambios de régimen de volatilidad.
+a los cambios de volatilidad.
 
 **Modelos ARIMA/GARCH:** Si bien capturan la estructura de autocorrelación y la
 heterocedasticidad condicional, son modelos univariados que no explotan la estructura
@@ -172,10 +171,10 @@ justifican su uso en este problema:
   secuenciales, superando la limitación de los modelos ARIMA que sólo consideran
   un número fijo y pequeño de lags.
 
-- **Aprendizaje multivariado nativo:** Un único modelo puede procesar
-  simultáneamente múltiples series (retorno, volatilidad, volumen de varios activos),
-  aprendiendo la estructura de co-movimiento normal y detectando anomalías de
-  correlación cruzada.
+- **Aprendizaje multivariado nativo:** Un único modelo procesa simultáneamente
+  múltiples features de un mismo activo (retorno, volatilidad, volumen),
+  aprendiendo la estructura de co-variación normal y detectando anomalías que se
+  manifiestan en la combinación de estas variables.
 
 - **Detección no paramétrica:** Al no asumir una distribución específica de los
   datos, el modelo aprende la geometría real del espacio de comportamientos normales
@@ -294,9 +293,9 @@ Anomalía si:  MSE_t > τ
 Normal si:    MSE_t ≤ τ
 ```
 
-donde τ se determina empíricamente como un percentil alto (p.ej., percentil 95
-o 99) de la distribución de errores de reconstrucción sobre el conjunto de
-entrenamiento.
+donde τ se determina empíricamente sobre el conjunto de validación, como un
+percentil alto (p.ej., percentil 95 o 99) de la distribución de errores de
+reconstrucción.
 
 ---
 
@@ -369,8 +368,8 @@ La arquitectura del Denoising Autoencoder recurrente se define como sigue:
 
 ```
 ENTRADA: tensor de forma (batch_size, T, F)
-         T = longitud de secuencia (ventana temporal, justificada por ACF/PACF)
-         F = número de features por timestep
+         T = 30  (ventana temporal, justificada mediante ACF/PACF en Notebook 2)
+         F = 3   (log_return, vol_21d, vol_zscore)
 
 ENCODER:
   Capa 1: LSTM/GRU(units=64, return_sequences=True)  + Dropout(0.2)
@@ -390,7 +389,6 @@ SALIDA: tensor de forma (batch_size, T, F)
 **Parámetros a determinar experimentalmente:**
 
 - Dimensión del espacio latente (`latent_dim`): se evaluarán valores en {8, 16, 32}
-- Longitud de ventana T: justificada mediante ACF/PACF (Notebook 2)
 - Nivel de ruido del DAE (σ_noise): se evaluarán valores en {0.01, 0.05, 0.1}
 - Tasa de dropout: se evaluarán valores en {0.1, 0.2, 0.3}
 
@@ -419,11 +417,12 @@ por activo. Este periodo fue seleccionado por las siguientes razones:
 
 - **Suficiencia estadística:** Un mínimo de 2,000 observaciones es necesario para
   estimar distribuciones empíricas robustas del error de reconstrucción.
-- **Cobertura de regímenes múltiples:** El periodo incluye mercados alcistas
-  (2016–2019, 2021), crisis sistémicas (2020) y ciclos de contracción monetaria
-  (2022–2023), proporcionando diversidad de regímenes para entrenamiento y evaluación.
+- **Cobertura de condiciones de mercado múltiples:** El periodo incluye mercados
+  alcistas (2016–2019, 2021), crisis sistémicas (2020) y ciclos de contracción
+  monetaria (2022–2023), proporcionando diversidad de escenarios para entrenamiento
+  y evaluación.
 - **Relevancia temporal:** La inclusión del periodo post-COVID permite evaluar el
-  comportamiento del modelo ante un nuevo régimen de mercado tras una crisis sin
+  comportamiento del modelo ante un nuevo escenario de mercado tras una crisis sin
   precedentes.
 
 ### **7.3 Periodos de Referencia para Evaluación**
@@ -435,9 +434,10 @@ validación cualitativa del modelo:
 |---|---|---|---|
 | Crisis del petróleo | Jul 2015 – Feb 2016 | Desplome del precio del crudo WTI | EC |
 | Pandemia COVID-19 | Feb 2020 – May 2020 | Shock sistémico global | Todos |
-| Recuperación post-COVID | Jun 2020 – Dic 2020 | Régimen de alta volatilidad positiva | Todos |
+| Recuperación post-COVID | Jun 2020 – Dic 2020 | Periodo de alta volatilidad positiva | Todos |
 | Ciclo de alzas Fed | Ene 2022 – Dic 2022 | Endurecimiento monetario global | Todos |
 | Incertidumbre política Colombia | May 2021 – Ene 2022 | Elecciones y paro nacional | CIB, AVAL |
+| Tornado de Dallas | Oct 2019 | Demostración pública de resistencia del vidrio de Tecnoglass; inicio de revalorización estructural del activo | TGLS |
 
 ---
 
@@ -475,7 +475,7 @@ donde la multiplicación por √252 anualiza la medida.
 **Justificación:**
 
 - Captura el nivel de riesgo condicional local, proveyendo al modelo información
-  sobre el régimen de volatilidad vigente.
+  sobre el nivel de volatilidad vigente.
 - Al ser una transformación de los retornos (diferencias), la serie resultante es
   estacionaria.
 - La ventana de 21 días refleja el horizonte mensual estándar utilizado en gestión
@@ -511,10 +511,9 @@ la ventana rodante de 21 días inmediatamente anteriores a t.
 | Volatilidad rodante (21d) | σ_t | Desv. estándar anualizada | Diaria (ventana 21d) |
 | Volumen z-score (21d) | z_vol_t | Vol. normalizado respecto a media rodante | Diaria (ventana 21d) |
 
-> **Nota sobre features adicionales:** En una extensión del modelo base se evaluará
-> la inclusión de indicadores técnicos (RSI, bandas de Bollinger, MACD). Sin embargo,
-> el modelo base se construye exclusivamente con las tres variables anteriores para
-> mantener la parsimonia y facilitar la interpretación de los resultados.
+> **Nota sobre features adicionales:** El modelo base se construye exclusivamente
+> con las tres variables anteriores para mantener la parsimonia y facilitar la
+> interpretación de los resultados.
 
 ---
 
@@ -541,7 +540,7 @@ conjunto de entrenamiento con información estadística del futuro:
 
 **Justificación de la partición:**
 
-- **Entrenamiento (2015–2019):** Comprende el régimen de "comportamiento normal"
+- **Entrenamiento (2015–2019):** Comprende el periodo de comportamiento normal
   dominante, con la excepción de la crisis del petróleo (2015–2016), que provee
   diversidad moderada de volatilidad sin contaminar el conjunto con el mayor
   evento de estrés del periodo (COVID-19).
@@ -553,8 +552,8 @@ conjunto de entrenamiento con información estadística del futuro:
 
 ### **9.2 Generación de Ventanas Temporales**
 
-El modelo recibe como entrada ventanas deslizantes de longitud T (a determinar
-en Notebook 2 mediante ACF/PACF):
+El modelo recibe como entrada ventanas deslizantes de longitud T=30, justificada
+mediante ACF/PACF en el Notebook 2:
 
 ```python
 # Pseudocódigo de generación de ventanas
@@ -566,7 +565,7 @@ for t in range(T, len(data)):
 - Las ventanas se generan con stride = 1 (ventana deslizante de un día).
 - No existe solapamiento entre las ventanas de entrenamiento y validación/test.
 - La primera ventana válida inicia en el timestep T + warm_up_period,
-  donde warm_up_period = max(21 días de volatilidad rodante, 26 días de MACD).
+  donde warm_up_period = 21 días (periodo de inicialización de la volatilidad rodante).
 
 ### **9.3 Protocolo de Evaluación**
 
@@ -577,7 +576,7 @@ La evaluación del modelo se realiza en dos niveles:
 - Distribución del error de reconstrucción MSE por split (entrenamiento vs.
   validación vs. test).
 - Selección del umbral τ como el percentil p de la distribución MSE del conjunto
-  de entrenamiento. Se evaluarán p ∈ {90, 95, 99}.
+  de validación. Se evaluarán p ∈ {90, 95, 99}.
 - Métricas de detección contra etiquetas de anomalía conocidas:
   Precisión, Recall, F1-Score, AUC-ROC.
 
@@ -586,7 +585,7 @@ La evaluación del modelo se realiza en dos niveles:
 - Visualización de la serie temporal del MSE con los periodos de crisis anotados.
 - Verificación de que los picos de MSE coinciden con eventos anómalos conocidos.
 - Análisis del espacio latente mediante reducción dimensional (t-SNE/UMAP)
-  para confirmar la separabilidad de regímenes normales y anómalos.
+  para confirmar la separabilidad de observaciones normales y anómalas.
 
 ### **9.4 Manejo del Data Leakage**
 
@@ -606,40 +605,30 @@ Se identifican y controlan explícitamente los siguientes vectores de data leaka
 
 ### **10.1 Objetivo General**
 
-Desarrollar y evaluar un sistema de detección de anomalías y cambios de régimen
-en series de tiempo financieras de acciones colombianas, basado en un Denoising
-Autoencoder con arquitectura recurrente (LSTM/GRU), mediante un enfoque de
-aprendizaje no supervisado que aprenda la representación latente del comportamiento
-normal del mercado y señale desviaciones significativas a través del error de
-reconstrucción.
+Desarrollar un sistema automatizado para la detección de anomalías puntuales en
+el comportamiento de activos financieros colombianos (ADRs) mediante el uso de
+arquitecturas de Deep Learning no supervisado basadas en Denoising Autoencoders
+con capas recurrentes.
 
 ### **10.2 Objetivos Específicos**
 
-1. **Caracterizar estadísticamente** las series de tiempo de retornos, volatilidad
-   y volumen de los activos colombianos seleccionados, identificando propiedades
-   de estacionariedad, distribución y dependencia temporal que informen las
-   decisiones de preprocesamiento y diseño arquitectónico.
+**Objetivo Específico 1:** Caracterizar el comportamiento histórico de los ADRs
+seleccionados mediante Análisis Exploratorio de Datos (EDA) y estructurar un
+pipeline de Feature Engineering basado en ventanas deslizantes que preserve la
+dependencia temporal y garantice la estacionariedad de las variables.
 
-2. **Diseñar y justificar** la ingeniería de features, la longitud de ventana
-   temporal y la estrategia de partición de datos garantizando la ausencia de
-   data leakage en todas sus formas.
+**Objetivo Específico 2:** Diseñar e implementar modelos de Denoising Autoencoders
+utilizando capas recurrentes (LSTM y GRU), incorporando un mecanismo de perturbación
+por ruido gaussiano durante el entrenamiento, orientados a aprender la representación
+latente de las series financieras mediante la minimización del error de reconstrucción
+sobre secuencias normales.
 
-3. **Implementar y entrenar** un Denoising Autoencoder con encoder y decoder
-   recurrentes (LSTM y GRU), comparando ambas variantes en términos de capacidad
-   de reconstrucción y sensibilidad detectora.
-
-4. **Determinar empíricamente** el umbral óptimo de detección de anomalías sobre
-   el conjunto de validación, analizando el trade-off entre precisión y recall para
-   distintos niveles de percentil.
-
-5. **Evaluar la capacidad del modelo** para identificar los periodos anómalos
-   conocidos (crisis del petróleo, COVID-19, ciclo de alzas de tasas) mediante
-   métricas cuantitativas y visualizaciones cualitativas del error de
-   reconstrucción temporal.
-
-6. **Analizar el espacio latente** aprendido por el encoder para determinar si
-   las representaciones de regímenes normales y anómalos son geométricamente
-   separables, validando la hipótesis de compresión selectiva del autoencoder.
+**Objetivo Específico 3:** Contrastar el desempeño del modelo propuesto contra un
+conjunto de modelos de referencia no supervisados (Z-Score, Isolation Forest,
+One-Class SVM, LSTM Predictor y GRU Predictor), evaluando su eficacia en la
+detección de crisis históricas documentadas mediante métricas de F1-Score y Área
+Bajo la Curva (AUC-ROC), con umbrales de anomalía determinados exclusivamente
+sobre el conjunto de validación para garantizar la ausencia de fuga de información.
 
 ---
 
