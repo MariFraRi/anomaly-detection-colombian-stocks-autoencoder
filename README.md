@@ -52,6 +52,7 @@ Datos diarios extraídos de **Yahoo Finance** para el período **2015–2024**.
 **Modelo principal:** DAE-GRU
 
 ## **Estructura del proyecto**
+```text
 anomaly-detection-colombian-stocks-autoencoder/
 │
 ├── data/
@@ -69,6 +70,7 @@ anomaly-detection-colombian-stocks-autoencoder/
 │
 ├── models/                   # Pesos entrenados por activo
 └── reports/                  # Figuras, tablas y resultados exportados
+```
 ## **Tecnologías**
 
 - Python 3.x
