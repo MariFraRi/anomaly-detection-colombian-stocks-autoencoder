@@ -1,0 +1,7 @@
+Comparacion,Wilcoxon sig,DM sig,BCa no solapa,n rechaza,Conclusion
+DAE-GRU vs Z-Score,False,True,False,1,Parcial (1/3)
+DAE-GRU vs Isolation Forest,False,True,False,1,Parcial (1/3)
+DAE-GRU vs One-Class SVM,False,True,False,1,Parcial (1/3)
+DAE-GRU vs LSTM Predictor,False,True,False,1,Parcial (1/3)
+DAE-GRU vs GRU Predictor,False,True,False,1,Parcial (1/3)
+DAE-GRU vs DAE-LSTM,False,True,False,1,Parcial (1/3)

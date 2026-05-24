@@ -1,6 +1,6 @@
-# 3. Revisión del Estado del Arte
+# Revisión del Estado del Arte
 
-## 3.1 Estrategia de Búsqueda
+## Estrategia de Búsqueda
 
 **Palabras clave utilizadas**
 
@@ -40,7 +40,7 @@ La búsqueda bibliográfica se construyó mediante la combinación sistemática 
 
 ---
 
-## 3.2 Identificación del Top de Modelos
+## Identificación del Top de Modelos
 
 A partir de la revisión sistemática se identificaron **siete modelos** que satisfacen los criterios de inclusión y presentan relevancia directa para el problema de detección de anomalías en series de tiempo financieras. Los modelos se ordenan de acuerdo con su impacto arquitectónico y alineación con el presente proyecto:
 
@@ -56,7 +56,7 @@ A partir de la revisión sistemática se identificaron **siete modelos** que sat
 
 ---
 
-## 3.3 Análisis Detallado por Modelo
+## Análisis Detallado por Modelo
 
 ---
 
@@ -417,7 +417,7 @@ Encoder LSTM con dimensión oculta 64: $\sim$100K–200K parámetros según núm
 
 ---
 
-## 3.4 Comparación Crítica
+## Comparación Crítica
 
 ### **Tabla Comparativa Estructurada**
 
