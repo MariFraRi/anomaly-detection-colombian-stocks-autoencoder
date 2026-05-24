@@ -3,7 +3,7 @@
 **Proyecto:** Detección de Anomalías en Mercados Accionarios Colombianos
 mediante Denoising Autoencoders con Arquitecturas LSTM/GRU
 
-**Autores:** Mariana Franco - Danier Conde - Samuel Bermúdez  
+**Autores:** Mariana Franco - Danier Conde  
 **Institución:** Universidad del Norte  
 **Fecha:** 2026
 
