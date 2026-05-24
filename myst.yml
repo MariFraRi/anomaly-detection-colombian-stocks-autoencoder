@@ -2,14 +2,34 @@
 version: 1
 project:
   id: 43c712bf-b617-4451-af8a-a2dbadb0987b
-  # title:
-  # description:
-  # keywords: []
-  # authors: []
-  # github:
-  # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
+  title: Identificación de Comportamientos Anómalos en Mercados Financieros
+  description: Detección de anomalías puntuales en ADRs colombianos (EC, CIB, AVAL, TGLS) mediante Denoising Autoencoders basados en GRU. Enfoque no supervisado con datos diarios 2015–2024.
+  keywords:
+    - anomaly detection
+    - denoising autoencoder
+    - GRU
+    - LSTM
+    - financial time series
+    - Colombian ADRs
+    - unsupervised learning
+    - deep learning
+  authors:
+    - name: Mariana Franco
+    - name: Danier Conde
+  github: https://github.com/TU_USUARIO/anomaly-detection-colombian-stocks-autoencoder
+  toc:
+    - file: README.md
+    - file: notebooks/Estado_del_arte.md
+    - file: notebooks/Notebook_00_Contexto_Metodologia.md
+    - file: notebooks/Notebook_01_EDA_Series_Tiempo_corregido.ipynb
+    - file: notebooks/Notebook_02_Feature_Engineering_corregido.ipynb
+    - file: notebooks/Notebook_03_Entrenamiento_DAE.ipynb
+    - file: notebooks/Notebook_04_Benchmarks_mse.ipynb
+    - file: notebooks/Notebook_05_Evaluacion_Final.ipynb
+    - file: notebooks/Notebook_06_Tests_Estadisticos.ipynb
+
 site:
   template: book-theme
-  # options:
-  #   favicon: favicon.ico
-  #   logo: site_logo.png
+  options:
+    favicon: favicon.ico
+    logo: site_logo.png
